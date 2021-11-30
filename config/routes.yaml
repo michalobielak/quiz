@@ -7,3 +7,7 @@ quiz:
 question:
     path: /quiz/question
     controller: App\Controller\QuizController::question
+
+questionadd:
+    path: /add
+    controller: App\Controller\IndexController::addQuestion
