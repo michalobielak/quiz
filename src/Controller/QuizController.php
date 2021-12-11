@@ -8,11 +8,22 @@ use App\Repository\QuestionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuizController extends AbstractController
 {
+    private $session;
+
     //TODO ogarnąć podsumowanie
+    /**
+     * QuizController constructor.
+     */
+    public function __construct()
+    {
+        $this->session = new Session();
+    }
+
     public function index(): Response
     {
         $form = $this->createForm(AnswerType::class);
@@ -30,17 +41,25 @@ class QuizController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $answer = $form->getData();
-            //TODO ogarnąć zapis i odczyt usera z sesji (nawet zwykły timestamp z momentu gdy zaczęto rozwiązywać quiz)
-            $answer->setUser(1);
+            $user = $this->session->get('user');
+            if (is_null($user)) {
+                $user = time();
+                $this->session->set('user', $user);
+            }
+
+            $answer->setUser($user);
             $question = $questionRepository->find($form->get('question_id')->getData());
             $answer->setQuestion($question);
             $entityManage = $this->getDoctrine()->getManager();
             $entityManage->persist($answer);
             $entityManage->flush();
-            return $this->redirectToRoute('quiz');
         }
-        //TODO losowanie pytań
-        $question = $questionRepository->find(1);
+        $questions = $questionRepository->findAll();
+        $questionsCount = count($questions);
+        $index = rand(0, $questionsCount - 1);
+
+        $question = $questions[$index];
+        $form = $this->createForm(AnswerType::class, $answer, ['attr' => ['id' => 'answer_form']]);
         $form->get('question_id')->setData($question->getId());
         return $this->render('quiz/ajax/question.html.twig', [
             'question' => $question->getQuestion(),

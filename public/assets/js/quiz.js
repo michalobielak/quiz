@@ -17,11 +17,11 @@ function submitForm(el) {
     $.ajax({
         url:'/quiz/question',
         type: "POST",
-        dataType: "json",
         data: form,
         async: true,
         success: function(response) {
-            $('#question').html(response)
+            $('#question').html(response);
+            init();
         }
     });
 }
