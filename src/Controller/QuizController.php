@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Answer;
+use App\Entity\Competence;
 use App\Form\AnswerType;
 use App\Repository\QuestionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,31 +22,27 @@ class QuizController extends AbstractController
      */
     public function __construct()
     {
-        $this->session = new Session();
+//        $this->session = new Session();
     }
 
-    public function index(): Response
+    public function index(Competence $competence): Response
     {
         $form = $this->createForm(AnswerType::class);
         return $this->render('quiz/index.html.twig', [
-            'controller_name' => 'QuizController','form' => $form->createView()
+            'controller_name' => 'QuizController', 'competence' => $competence,'form' => $form->createView()
         ]);
     }
 
-    public function question(QuestionRepository $questionRepository, Request $request): Response
+    public function question(QuestionRepository $questionRepository, Request $request, Competence $competence): Response
     {
         $answer = new Answer();
-
+        $this->session = $request->getSession();
         $form = $this->createForm(AnswerType::class, $answer, ['attr' => ['id' => 'answer_form']]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $answer = $form->getData();
             $user = $this->session->get('user');
-            if (is_null($user)) {
-                $user = time();
-                $this->session->set('user', $user);
-            }
 
             $answer->setUser($user);
             $question = $questionRepository->find($form->get('question_id')->getData());
@@ -54,11 +51,12 @@ class QuizController extends AbstractController
             $entityManage->persist($answer);
             $entityManage->flush();
         }
-        $questions = $questionRepository->findAll();
-        $questionsCount = count($questions);
-        $index = rand(0, $questionsCount - 1);
+        $numberQuestion = $this->session->get('numberQuestion');
+        $questions = $competence->getQuestions();
+        $question = $questions->get($numberQuestion);
+        $numberQuestion++;
+        $this->session->set('numberQuestion', $numberQuestion);
 
-        $question = $questions[$index];
         $form = $this->createForm(AnswerType::class, $answer, ['attr' => ['id' => 'answer_form']]);
         $form->get('question_id')->setData($question->getId());
         return $this->render('quiz/ajax/question.html.twig', [

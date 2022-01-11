@@ -1,6 +1,7 @@
 $(document).ready(function () {
+    var competence = $('#question').data('competence');
     $.ajax({
-        url: '/quiz/question',
+        url: '/quiz/question/' + competence,
         success: function(response) {
             $('#question').html(response);
             init();
@@ -13,9 +14,9 @@ function init() {
 }
 function submitForm(el) {
     form = $('#answer_form').serialize();
-
+    var competence = $('#question').data('competence');
     $.ajax({
-        url:'/quiz/question',
+        url:'/quiz/question/' + competence,
         type: "POST",
         data: form,
         async: true,

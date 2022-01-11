@@ -29,6 +29,16 @@ class Question
      */
     private $range;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Area::class, inversedBy="questions")
+     */
+    private $Area;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Competence::class, inversedBy="questions")
+     */
+    private $Competence;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
@@ -59,6 +69,30 @@ class Question
     public function setRange(int $range): self
     {
         $this->range = $range;
+
+        return $this;
+    }
+
+    public function getArea(): ?Area
+    {
+        return $this->Area;
+    }
+
+    public function setArea(?Area $Area): self
+    {
+        $this->Area = $Area;
+
+        return $this;
+    }
+
+    public function getCompetence(): ?Competence
+    {
+        return $this->Competence;
+    }
+
+    public function setCompetence(?Competence $Competence): self
+    {
+        $this->Competence = $Competence;
 
         return $this;
     }

@@ -16,12 +16,29 @@
 
     <h1>Badanie kompetencji cyfrowych</h1>
 
+    <p>Wybierz obszar, z którego rozwiążesz test.</p>
     <div style="text-align: center">
-    <a href="{{ path("quiz") }}" class="btn btn-sq-lg btn-primary">
-        <i class="fas fa-question fa-5x"></i><br/>
-        Rozwiąż nasz QUIZ
-    </a>
+        {% for area in areas %}
+            <a href="{{ path("competence", {area: area.id}) }}" class="btn area btn-sq-lg btn-{{ btnClass[area.id] }}" data-desc="{{ area.desription }}">
+                <i class="fas fa-question fa-5x"></i><br/>
+                {{ area.name }}
+            </a>
+        {% endfor %}
+
     </div>
-{#    <a href="{{ path("quiz") }}">Przejdź do quiz'u</a>#}
+    <div>
+        <p id="area-desc">
+
+        </p>
+    </div>
 </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+    $(document).ready(function() {
+        $('.area').mouseenter(function() {
+            $('#area-desc').text($(this).data('desc'));
+    });
+    });
+    </script>
 {% endblock %}
