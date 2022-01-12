@@ -12,18 +12,12 @@ quiz:
     requirements:
         competence: '\d+'
 question:
-    path: /quiz/question/{competence}
+    path: /quiz/question
     controller: App\Controller\QuizController::question
-    requirements:
-        competence: '\d+'
-questionadd:
-    path: /addquestion
-    controller: App\Controller\IndexController::addQuestion
+import:
+    path: /import
+    controller: App\Controller\IndexController::import
 
-areaadd:
-    path: /addarea
-    controller: App\Controller\IndexController::addAreas
-
-competenceadd:
-    path: /addcompetence
-    controller: App\Controller\IndexController::addCompetence
+summary:
+    path: /quiz/summary
+    controller: App\Controller\QuizController::summary

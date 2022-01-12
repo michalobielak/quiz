@@ -40,9 +40,15 @@ class Competence
      */
     private $questions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Summary::class, mappedBy="Competence")
+     */
+    private $summaries;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
+        $this->summaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +123,36 @@ class Competence
             // set the owning side to null (unless already changed)
             if ($question->getCompetence() === $this) {
                 $question->setCompetence(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Summary[]
+     */
+    public function getSummaries(): Collection
+    {
+        return $this->summaries;
+    }
+
+    public function addSummary(Summary $summary): self
+    {
+        if (!$this->summaries->contains($summary)) {
+            $this->summaries[] = $summary;
+            $summary->setCompetence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSummary(Summary $summary): self
+    {
+        if ($this->summaries->removeElement($summary)) {
+            // set the owning side to null (unless already changed)
+            if ($summary->getCompetence() === $this) {
+                $summary->setCompetence(null);
             }
         }
 

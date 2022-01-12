@@ -39,10 +39,16 @@ class Area
      */
     private $questions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Summary::class, mappedBy="area")
+     */
+    private $summaries;
+
     public function __construct()
     {
         $this->competences = new ArrayCollection();
         $this->questions = new ArrayCollection();
+        $this->summaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,6 +141,36 @@ class Area
             // set the owning side to null (unless already changed)
             if ($question->getArea() === $this) {
                 $question->setArea(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Summary[]
+     */
+    public function getSummaries(): Collection
+    {
+        return $this->summaries;
+    }
+
+    public function addSummary(Summary $summary): self
+    {
+        if (!$this->summaries->contains($summary)) {
+            $this->summaries[] = $summary;
+            $summary->setArea1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSummary(Summary $summary): self
+    {
+        if ($this->summaries->removeElement($summary)) {
+            // set the owning side to null (unless already changed)
+            if ($summary->getArea1() === $this) {
+                $summary->setArea1(null);
             }
         }
 

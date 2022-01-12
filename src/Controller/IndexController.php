@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Area;
 use App\Entity\Competence;
 use App\Entity\Question;
+use App\Entity\Summary;
 use App\Repository\AreaRepository;
 use App\Repository\CompetenceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +43,16 @@ class IndexController extends AbstractController
         ]);
     }
 
-    public function addAreas(): Response
+    public function import(AreaRepository $areaRepository, CompetenceRepository $competenceRepository): Response
+    {
+        $this->addAreas();
+        $this->addCompetence($areaRepository);
+        $this->addQuestion($areaRepository, $competenceRepository);
+        $this->addSummary($areaRepository, $competenceRepository);
+
+        return $this->redirectToRoute('index');
+    }
+    public function addAreas()
     {
         $fileContent = file_get_contents('obszary.csv');
         var_dump($fileContent);
@@ -60,9 +70,8 @@ class IndexController extends AbstractController
             $entityManage->persist($area);
             $entityManage->flush();
         }
-        return $this->redirectToRoute('index');
     }
-    public function addCompetence(AreaRepository $areaRepository): Response
+    public function addCompetence(AreaRepository $areaRepository)
     {
         $fileContent = file_get_contents('kompetencje.csv');
         $contentArray = explode(PHP_EOL, $fileContent);
@@ -78,10 +87,9 @@ class IndexController extends AbstractController
             $entityManage->persist($competence);
             $entityManage->flush();
         }
-        return $this->redirectToRoute('index');
     }
 
-    public function addQuestion(AreaRepository $areaRepository, CompetenceRepository $competenceRepository): Response
+    public function addQuestion(AreaRepository $areaRepository, CompetenceRepository $competenceRepository)
     {
         $fileContent = file_get_contents('pytania.csv');
         $contentArray = explode(PHP_EOL, $fileContent);
@@ -98,7 +106,28 @@ class IndexController extends AbstractController
             $entityManage->persist($question);
             $entityManage->flush();
         }
-        return $this->redirectToRoute('index');
+    }
 
+    public function addSummary(AreaRepository $areaRepository, CompetenceRepository $competenceRepository)
+    {
+        $fileContent = file_get_contents('podsumowania.csv');
+        $contentArray = explode(PHP_EOL, $fileContent);
+
+        unset($contentArray[0]);
+        foreach ($contentArray as $line) {
+            $lineArray = explode(';', $line);
+            if (!isset($lineArray[1])) {
+                continue;
+            }
+            $summary = new Summary();
+            $summary
+                ->setArea($areaRepository->find($lineArray[0]))
+                ->setCompetence($competenceRepository->find($lineArray[1]))
+                ->setEvalution($lineArray[2])
+                ->setDescription($lineArray[3]);
+            $entityManage = $this->getDoctrine()->getManager();
+            $entityManage->persist($summary);
+            $entityManage->flush();
+        }
     }
 }
