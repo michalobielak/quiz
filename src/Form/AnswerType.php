@@ -31,7 +31,7 @@ class AnswerType extends AbstractType
                 ],
                 'expanded' =>true,
                 'data' => 1,
-                'label' => 'Odpowiedz',
+                'label' => ' ',
                 'choice_attr' => function($choice, $key, $value){
                     return ['class' => 'form-check-input'];
                 }

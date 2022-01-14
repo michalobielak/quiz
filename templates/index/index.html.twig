@@ -1,44 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}Badanie kompetencji cyfrowych
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    .btn-sq-lg {
-        width: 150px !important;
-        height: 150px !important;
-    }
-</style>
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+		.btn-sq-lg {
+			width: 250px !important;
+			height: 150px !important;
+		}
+		.title {
+			background-color: black;
+			color: whitesmoke;
+			padding: 25px;
+			margin-left: 20px;
+			margin-right: 20px;
+			text-align: center;
+		}
+		.subtitle {
+			text-align: center;
+			margin-top: 20px;
+			margin-bottom: 40px;
+		}
+		.block {}
+	</style>
 
-<div class="example-wrapper">
+	<div class="example-wrapper">
 
-    <h1>Badanie kompetencji cyfrowych</h1>
+		<div class="title">
+			<h1>Badanie kompetencji cyfrowych</h1>
+		</div>
 
-    <p>Wybierz obszar, z którego rozwiążesz test.</p>
-    <div style="text-align: center">
-        {% for area in areas %}
-            <a href="{{ path("competence", {area: area.id}) }}" class="btn area btn-sq-lg btn-{{ btnClass[area.id] }}" data-desc="{{ area.desription }}">
-                <i class="fas fa-question fa-5x"></i><br/>
-                {{ area.name }}
-            </a>
-        {% endfor %}
+		<h2 class="subtitle">Wybierz obszar, z którego rozwiążesz test.</h2>
+		<div style="text-align: center;">
+			{% for area in areas %}
+				<a href="{{ path("competence", {area: area.id}) }}" class="block btn area btn-sq-lg btn-{{ btnClass[area.id] }}" data-desc="{{ area.desription }}">
+					<i class="fas fa-question fa-5x"></i><br/>
+					{{ area.name }}
+				</a>
+			{% endfor %}
 
-    </div>
-    <div>
-        <p id="area-desc">
-
-        </p>
-    </div>
-</div>
+		</div>
+		<div>
+			{# <p id="area-desc"></p> #}
+		</div>
+	</div>
 {% endblock %}
 {% block javascripts %}
-    <script>
-    $(document).ready(function() {
-        $('.area').mouseenter(function() {
-            $('#area-desc').text($(this).data('desc'));
-    });
-    });
-    </script>
+	<script>
+		$(document).ready(function () {
+$('.area').mouseenter(function () {
+$('#area-desc').text($(this).data('desc'));
+});
+});
+	</script>
 {% endblock %}

@@ -1,8 +1,47 @@
-
-<div class="example-wrapper">
-    <h2>Podsumowanie</h2>
-    <p>Zdobyłeś {{ summaryPercent }}%</p>
-    <p>Twój poziom wiedzy jest {{ summaryDesc }}.</p>
-    <p>{{ summaryLongDesc }}</p>
+{% block body %}
+	<style>
+		.title {
+			background-color: black;
+			color: whitesmoke;
+			padding: 25px;
+			margin-left: 20px;
+			margin-right: 20px;
+			text-align: center;
+		}
+		.subtitle {
+			text-align: center;
+			margin-top: 20px;
+			margin-bottom: 40px;
+		}
+		a {
+			font: bold 20px Arial;
+			text-decoration: none;
+			background-color: #4361ee;
+			color: whitesmoke;
+			padding: 10px 20px;
+			border-top: 1px solid #CCCCCC;
+			border-right: 1px solid #333333;
+			border-bottom: 1px solid #333333;
+			border-left: 1px solid #CCCCCC;
+			border-radius: 15px;
+			margin-top: 20px;
+		}
+		a:hover {
+			color: whitesmoke;
+		}
+		.return {
+			text-align: center;
+		}
+	</style>
+{% endblock %}
+<div class="subtitle">
+	<h2 class="title">Podsumowanie</h2>
+	<h3>Zdobyłeś
+		{{ summaryPercent }}%</h3>
+	<h3>Twój poziom wiedzy jest
+		{{ summaryDesc }}.</h3>
+	<h3>{{ summaryLongDesc }}</h3>
 </div>
-
+<div class="return">
+	<a href="/">Wróć do strony głównej</a>
+</div>

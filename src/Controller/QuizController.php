@@ -66,9 +66,9 @@ class QuizController extends AbstractController
         $numberQuestion = $this->session->get('numberQuestion');
         $questions = $competence->getQuestions();
         $questionsCount = $questions->count();
-        var_dump($numberQuestion);
-        var_dump($questionsCount);
-        var_dump(array_keys($questions->toArray()));
+        // var_dump($numberQuestion);
+        // var_dump($questionsCount);
+        // var_dump(array_keys($questions->toArray()));
         if ($questionsCount <= $numberQuestion) {
             return $this->redirectToRoute('summary');
         }
